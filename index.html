@@ -1,0 +1,838 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090607">
+<title>CHILLI HUB V7</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700;800&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --red: #ff263d;
+  --red2: #c90824;
+  --orange: #ff7028;
+  --gold: #ffd078;
+  --dark: #090607;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  overflow-x: hidden;
+  background: var(--dark);
+  color: white;
+  font-family: 'Rajdhani', sans-serif;
+  isolation: isolate;
+}
+
+/* BACKGROUND */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 42%, #42100f 0%, #1c0b0c 35%, #090607 75%);
+}
+
+.ambient {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .22;
+  animation: ambientMove 12s ease-in-out infinite alternate;
+}
+
+.ambient.a {
+  background: #ff182c;
+  top: -180px;
+  left: -100px;
+}
+
+.ambient.b {
+  background: #ff6b20;
+  right: -180px;
+  bottom: -100px;
+  animation-delay: -5s;
+}
+
+.ambient.c {
+  width: 200px;
+  height: 200px;
+  background: #a70a24;
+  left: 35%;
+  bottom: -130px;
+  animation-delay: -3s;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: .12;
+  background-image:
+    linear-gradient(#ff43301a 1px, transparent 1px),
+    linear-gradient(90deg, #ff43301a 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+
+.light-beam {
+  position: absolute;
+  top: -40%;
+  left: -70%;
+  width: 45%;
+  height: 180%;
+  background: linear-gradient(90deg, transparent, #ff3a2b08, #ff9b3b12, transparent);
+  transform: rotate(22deg);
+  animation: beamTravel 12s ease-in-out infinite;
+}
+
+/* CARD */
+.card {
+  width: min(100%, 400px);
+  position: relative;
+  padding: 29px 25px 23px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid #ff453b40;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #201112ed, #100b0df5 65%, #16090b);
+  box-shadow:
+    0 25px 90px #000b,
+    0 0 45px #ff302b13,
+    inset 0 1px #ffffff14;
+  animation: cardEnter .9s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ff5548, #ffbd72, transparent);
+  animation: borderTravel 5s linear infinite;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #ff513a40, transparent 35%, #ff9a3024 70%, #ff3b4a40);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* COMPACT CHILLI + FLAME LOGO */
+.logo-area {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 11px;
+  display: grid;
+  place-items: center;
+  animation: logoHover 4s ease-in-out infinite;
+}
+
+.logo-aura {
+  position: absolute;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: #ff352817;
+  box-shadow: 0 0 35px #ff322d25;
+  animation: auraPulse 3s ease-in-out infinite;
+}
+
+.logo-ring {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  border: 1px solid #ff64422b;
+  border-radius: 50%;
+  animation: ringPulse 4s ease-in-out infinite;
+}
+
+.logo-ring::before,
+.logo-ring::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px #ff6b31;
+}
+
+.logo-ring::before {
+  top: 12px;
+  right: 14px;
+}
+
+.logo-ring::after {
+  bottom: 12px;
+  left: 14px;
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  width: 76px;
+  height: 86px;
+  overflow: visible;
+  filter: drop-shadow(0 6px 9px #ff291e42);
+}
+
+.flame-back {
+  transform-origin: 43px 49px;
+  animation: flamePulse 2.1s ease-in-out infinite;
+}
+
+.flame-inner {
+  transform-origin: 43px 49px;
+  animation: innerFire 1.6s ease-in-out infinite alternate;
+}
+
+.pepper {
+  transform-origin: 42px 49px;
+  animation: pepperMotion 3.5s ease-in-out infinite;
+}
+
+.logo-shine {
+  animation: shineBlink 2.8s ease-in-out infinite;
+}
+
+/* PREMIUM TITLE */
+.brand {
+  font-family: 'Oxanium', sans-serif;
+  font-size: clamp(26px, 7.5vw, 33px);
+  line-height: 1.17;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+  color: #fff9f5;
+  text-shadow:
+    0 2px 0 #76131c,
+    0 0 14px #ff332e2b;
+}
+
+.brand span {
+  display: inline-block;
+  background: linear-gradient(
+    105deg,
+    #ff574b 0%,
+    #ffb35d 25%,
+    #fff0cb 45%,
+    #ff6a42 62%,
+    #ff344b 85%,
+    #ff9c57 100%
+  );
+  background-size: 250% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleFlow 5s linear infinite;
+}
+
+.underline {
+  width: 110px;
+  height: 3px;
+  margin: 13px auto 9px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, transparent, #ff3b38, #ffc06a, #ff4137, transparent);
+  background-size: 200% 100%;
+  box-shadow: 0 0 12px #ff352b65;
+  animation: lineFlow 3s linear infinite;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #c7aaa5;
+  text-transform: uppercase;
+}
+
+.status {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 21px auto 23px;
+  padding: 7px 14px;
+  border: 1px solid #ff574029;
+  border-radius: 30px;
+  background: #ff3b320b;
+  color: #ffc0ac;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff594c;
+  box-shadow: 0 0 12px #ff3d33;
+  animation: dotBeat 1.5s ease-in-out infinite;
+}
+
+/* KEY PANEL */
+.key-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  color: #d7c4bf;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-align: left;
+}
+
+.key-label small {
+  color: #ff735e;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.key-box {
+  position: relative;
+  padding: 13px;
+  border: 1px solid #ffffff17;
+  border-radius: 13px;
+  background: linear-gradient(120deg, #080708, #12090a);
+  transition: border-color .3s, box-shadow .3s, transform .3s;
+}
+
+.key-box:focus-within {
+  border-color: #ff554c99;
+  box-shadow: 0 0 22px #ff38251a;
+  transform: translateY(-1px);
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 47px;
+  resize: none;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: #ffb8a8;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+/* BUTTON */
+.copy-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 51px;
+  margin-top: 14px;
+  border: 1px solid #ffb26a45;
+  border-radius: 12px;
+  background: linear-gradient(105deg, #a90e25, #f32b38 45%, #ff782d);
+  box-shadow: 0 7px 25px #f32a302c, inset 0 1px #ffffff35;
+  color: white;
+  font-family: 'Oxanium', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s, filter .25s;
+}
+
+.copy-btn::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -80%;
+  left: -80%;
+  width: 40%;
+  height: 260%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent, #ffffff65, transparent);
+  animation: buttonShine 4s ease-in-out infinite;
+}
+
+.copy-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px #ff2d383e, 0 0 16px #ff63261c;
+  filter: brightness(1.1);
+}
+
+.copy-btn:active {
+  transform: scale(.98);
+}
+
+.copy-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.message {
+  min-height: 20px;
+  margin-top: 10px;
+  color: #ffad93;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.footer {
+  margin-top: 16px;
+  padding-top: 15px;
+  border-top: 1px solid #ffffff0d;
+  color: #786665;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.footer strong {
+  color: #ff6958;
+}
+
+/* PARTICLES */
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ember {
+  position: absolute;
+  bottom: -20px;
+  width: var(--size, 3px);
+  height: var(--size, 3px);
+  border-radius: 50%;
+  background: var(--ember-color, #ff5435);
+  box-shadow: 0 0 9px var(--ember-color, #ff5435);
+  opacity: 0;
+  animation: emberUp var(--duration, 9s) linear var(--delay, 0s) infinite;
+}
+
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffd49a;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ff6b37;
+  animation: sparkBlink 2.5s ease-in-out infinite;
+}
+
+.spark.s1 { top: 20%; left: 12%; }
+.spark.s2 { top: 73%; right: 13%; animation-delay: -.8s; }
+.spark.s3 { top: 32%; right: 9%; animation-delay: -1.5s; }
+.spark.s4 { top: 81%; left: 17%; animation-delay: -.5s; }
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(25px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ambientMove {
+  from { transform: translate(0, 0) scale(.9); }
+  to { transform: translate(55px, 45px) scale(1.2); }
+}
+
+@keyframes beamTravel {
+  0%, 15% { left: -70%; opacity: 0; }
+  35% { opacity: 1; }
+  75%, 100% { left: 130%; opacity: 0; }
+}
+
+@keyframes borderTravel {
+  to { left: 100%; }
+}
+
+@keyframes logoHover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes auraPulse {
+  0%, 100% { transform: scale(.9); opacity: .5; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: rotate(0deg) scale(.98); opacity: .55; }
+  50% { transform: rotate(9deg) scale(1.04); opacity: 1; }
+}
+
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.055) rotate(2deg); }
+}
+
+@keyframes innerFire {
+  from { opacity: .75; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1.06); }
+}
+
+@keyframes pepperMotion {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes shineBlink {
+  0%, 100% { opacity: .65; }
+  50% { opacity: 1; }
+}
+
+@keyframes titleFlow {
+  to { background-position: 250% center; }
+}
+
+@keyframes lineFlow {
+  to { background-position: 200% 0; }
+}
+
+@keyframes dotBeat {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .45; transform: scale(.78); }
+}
+
+@keyframes buttonShine {
+  0%, 40% { left: -80%; }
+  75%, 100% { left: 140%; }
+}
+
+@keyframes emberUp {
+  0% { transform: translate(0, 0) scale(.5); opacity: 0; }
+  12% { opacity: .8; }
+  65% { opacity: .65; }
+  100% { transform: translate(var(--drift, 25px), -110vh) scale(1.3); opacity: 0; }
+}
+
+@keyframes sparkBlink {
+  0%, 100% { opacity: .15; transform: scale(.7); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+@media (max-width: 420px) {
+  body { padding: 15px; }
+  .card { padding: 25px 19px 20px; }
+  .logo-area { width: 94px; height: 94px; }
+  .logo { width: 70px; height: 80px; }
+  .logo-ring { width: 86px; height: 86px; }
+  .brand { font-size: clamp(24px, 7.3vw, 30px); letter-spacing: .7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="background">
+  <div class="ambient a"></div>
+  <div class="ambient b"></div>
+  <div class="ambient c"></div>
+  <div class="grid"></div>
+  <div class="light-beam"></div>
+</div>
+
+<div class="particles" id="particles">
+  <i class="spark s1"></i>
+  <i class="spark s2"></i>
+  <i class="spark s3"></i>
+  <i class="spark s4"></i>
+</div>
+
+<main class="card">
+  <div class="logo-area">
+    <div class="logo-aura"></div>
+    <div class="logo-ring"></div>
+
+    <svg class="logo" viewBox="0 0 86 94" xmlns="http://www.w3.org/2000/svg"
+         role="img" aria-label="Chilli and flame logo">
+      <defs>
+        <linearGradient id="fireOuter" x1="44" y1="4" x2="45" y2="79"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFF1A9"/>
+          <stop offset=".2" stop-color="#FFB342"/>
+          <stop offset=".53" stop-color="#FF5A26"/>
+          <stop offset=".8" stop-color="#ED1E30"/>
+          <stop offset="1" stop-color="#8B0A21"/>
+        </linearGradient>
+
+        <linearGradient id="fireInner" x1="44" y1="27" x2="45" y2="73"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFF9D7"/>
+          <stop offset=".38" stop-color="#FFD46B"/>
+          <stop offset=".75" stop-color="#FF812F"/>
+          <stop offset="1" stop-color="#FF3C2D"/>
+        </linearGradient>
+
+        <linearGradient id="pepperSkin" x1="25" y1="22" x2="60" y2="81"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF6657"/>
+          <stop offset=".2" stop-color="#FF3544"/>
+          <stop offset=".53" stop-color="#E91435"/>
+          <stop offset=".8" stop-color="#B5092A"/>
+          <stop offset="1" stop-color="#65091C"/>
+        </linearGradient>
+
+        <linearGradient id="pepperLight" x1="27" y1="29" x2="41" y2="66"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFE0C0"/>
+          <stop offset=".35" stop-color="#FF9280"/>
+          <stop offset="1" stop-color="#FF5A4A" stop-opacity="0"/>
+        </linearGradient>
+
+        <linearGradient id="leafGreen" x1="30" y1="13" x2="47" y2="26"
+                        gradientUnits="userSpaceOnUse">
+          <stop stop-color="#D6FF91"/>
+          <stop offset=".45" stop-color="#68DB59"/>
+          <stop offset="1" stop-color="#218B42"/>
+        </linearGradient>
+
+        <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.3"/>
+        </filter>
+      </defs>
+
+      <!-- Outer flame -->
+      <g class="flame-back">
+        <path d="M47 5
+          C51 18 65 26 67 42
+          C70 58 60 74 47 80
+          C34 76 22 67 22 53
+          C21 42 29 34 31 24
+          C36 30 38 36 36 42
+          C44 34 48 23 47 5Z"
+          fill="#FF3B29" opacity=".35" filter="url(#softGlow)"/>
+
+        <path d="M47 5
+          C51 18 65 26 67 42
+          C70 58 60 74 47 80
+          C34 76 22 67 22 53
+          C21 42 29 34 31 24
+          C36 30 38 36 36 42
+          C44 34 48 23 47 5Z"
+          fill="url(#fireOuter)"/>
+
+        <path d="M47 28
+          C48 38 58 43 56 54
+          C55 64 49 70 43 70
+          C34 66 31 59 35 51
+          C37 46 42 42 42 36
+          C46 40 47 44 46 48
+          C51 42 49 34 47 28Z"
+          fill="url(#fireInner)" class="flame-inner"/>
+
+        <path d="M47 15C49 24 54 29 55 36"
+          stroke="#FFF0B2" stroke-width="2"
+          stroke-linecap="round" opacity=".7"/>
+      </g>
+
+      <!-- Curved red chili, in front of the flame -->
+      <g class="pepper">
+        <path d="M29 24
+          C38 26 47 28 54 34
+          C62 41 61 50 56 60
+          C51 71 40 81 29 84
+          C23 86 18 83 23 77
+          C30 69 34 61 34 52
+          C34 43 28 35 24 30
+          C21 26 24 22 29 24Z"
+          fill="#78091D" opacity=".55"
+          transform="translate(2 2)"/>
+
+        <path d="M29 24
+          C38 26 47 28 54 34
+          C62 41 61 50 56 60
+          C51 71 40 81 29 84
+          C23 86 18 83 23 77
+          C30 69 34 61 34 52
+          C34 43 28 35 24 30
+          C21 26 24 22 29 24Z"
+          fill="url(#pepperSkin)"/>
+
+        <!-- Natural highlight -->
+        <path d="M28 29
+          C35 34 40 42 39 51
+          C38 61 32 70 26 76"
+          stroke="url(#pepperLight)"
+          stroke-width="4"
+          stroke-linecap="round"
+          fill="none"/>
+
+        <path d="M35 33
+          C41 35 47 38 50 43"
+          stroke="#FFB2A0"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          opacity=".72"
+          fill="none"/>
+
+        <!-- Green stem -->
+        <path d="M28 26
+          C24 20 25 13 31 10
+          C31 16 36 18 43 17
+          C41 23 35 27 28 26Z"
+          fill="url(#leafGreen)"/>
+
+        <path d="M28 23C31 19 35 17 40 18"
+          stroke="#E0FF9D"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          fill="none"/>
+
+        <path d="M30 27
+          C34 25 37 25 40 26"
+          stroke="#A8FF72"
+          stroke-width="1.2"
+          stroke-linecap="round"
+          fill="none"
+          opacity=".8"/>
+
+        <path d="M54 57C51 65 45 72 39 76"
+          stroke="#FF8580"
+          stroke-width="1.2"
+          stroke-linecap="round"
+          opacity=".55"
+          fill="none"/>
+      </g>
+
+      <!-- Tiny glint -->
+      <g class="logo-shine">
+        <path d="M65 24V31M61.5 27.5H68.5"
+          stroke="#FFE4AA" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="65" cy="27.5" r="1.2" fill="#FFF0C4"/>
+      </g>
+    </svg>
+  </div>
+
+  <h1 class="brand"><span>CHILLI HUB V7</span></h1>
+  <div class="underline"></div>
+  <p class="subtitle">Premium Key System</p>
+
+  <div class="status">
+    <span class="status-dot"></span>
+    SYSTEM ONLINE
+  </div>
+
+  <label class="key-label" for="key">
+    <span>YOUR ACCESS KEY</span>
+    <small>V7.0</small>
+  </label>
+
+  <div class="key-box">
+    <textarea id="key" rows="2" spellcheck="false">ChilliHubV7KeyHakwo - KalapwjwbkKapwihebeu</textarea>
+  </div>
+
+  <button class="copy-btn" id="copyBtn" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="8" y="8" width="13" height="13" rx="2"/>
+      <path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>
+    </svg>
+    <span id="btnText">COPY KEY</span>
+  </button>
+
+  <p class="message" id="message" aria-live="polite"></p>
+
+  <footer class="footer">
+    POWERED BY <strong>CHILLI HUB</strong> · V7.0
+  </footer>
+</main>
+
+<script>
+const keyInput = document.getElementById('key');
+const copyBtn = document.getElementById('copyBtn');
+const btnText = document.getElementById('btnText');
+const message = document.getElementById('message');
+
+copyBtn.addEventListener('click', async () => {
+  const originalText = 'COPY KEY';
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(keyInput.value);
+    } else {
+      keyInput.focus();
+      keyInput.select();
+      const success = document.execCommand('copy');
+      if (!success) throw new Error('Copy failed');
+    }
+
+    btnText.textContent = 'KEY COPIED!';
+    message.textContent = 'Key đã được sao chép thành công!';
+    copyBtn.style.filter = 'brightness(1.2)';
+  } catch (error) {
+    keyInput.focus();
+    keyInput.select();
+    message.textContent = 'Hãy nhấn giữ phần key để sao chép thủ công.';
+  }
+
+  setTimeout(() => {
+    btnText.textContent = originalText;
+    message.textContent = '';
+    copyBtn.style.filter = '';
+  }, 2300);
+});
+
+/* Floating embers */
+const particles = document.getElementById('particles');
+
+for (let i = 0; i < 32; i++) {
+  const ember = document.createElement('span');
+  ember.className = 'ember';
+
+  ember.style.left = Math.random() * 100 + '%';
+  ember.style.setProperty('--size', (1.5 + Math.random() * 3) + 'px');
+  ember.style.setProperty('--duration', (7 + Math.random() * 11) + 's');
+  ember.style.setProperty('--delay', (-Math.random() * 15) + 's');
+  ember.style.setProperty('--drift', (-45 + Math.random() * 90) + 'px');
+  ember.style.setProperty(
+    '--ember-color',
+    Math.random() > .5 ? '#ff5037' : '#ffb34f'
+  );
+
+  particles.appendChild(ember);
+}
+</script>
+</body>
+</html>
